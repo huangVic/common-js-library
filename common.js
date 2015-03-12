@@ -286,3 +286,40 @@ function pageSingleImageResize(images,width,height){
     images.src = "";
     images.src = imagesTemp;
 }
+
+
+
+
+// ################# load html template   ################
+
+globalObject.loadHandlebarsTemplate = {
+    locadCommonTemplate: function(id_name, file_name, callbck){
+        console.log('load handlebars template ... start');
+        if(!id_name){
+            id_name = 'handlebars-common-template';
+        }
+        if(!file_name){
+            file_name = 'handlebarsTemplate.xml';
+        }
+        $('<script>', {id: id_name}).appendTo('head').ready(function(){
+                //var html = "handlebarsTemplate.xml";
+                $("#" + id_name ).load(file_name, function(data){
+                    console.log('load handlebars template ... success');
+                    if (callback && typeof(callback) === "function") {
+                        callback();
+                    };
+                });
+        });
+    },
+    loadIdTemplate: function( id, dataSet){
+        var html;
+        if( $("#" + id).length > 0 ){
+            var source = $("#" + id).html();
+            var template = Handlebars.compile(source);
+            html = template(dataSet);
+        }
+        return html;
+    }
+
+
+}
