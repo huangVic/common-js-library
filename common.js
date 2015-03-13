@@ -291,7 +291,6 @@ function pageSingleImageResize(images,width,height){
 
 
 // ################# load html template   ################
-
 globalObject.loadHandlebarsTemplate = {
     locadCommonTemplate: function(id_name, file_name, callbck){
         console.log('load handlebars template ... start');
@@ -321,5 +320,26 @@ globalObject.loadHandlebarsTemplate = {
         return html;
     }
 
+}
 
+
+
+// ################# Math Random  ################
+// The Math.random() function returns a floating-point, pseudo-random number in the range [0, 1) that is, from 0 (inclusive) up to but not including 1 (exclusive)
+globalObject.mathRandom = {
+    usefloor: function (min,max) {
+          // Returns a random integer between min (included) and max (excluded)
+          // # Math.floor 最接近的整數，小於數字本身的數
+           return Math.floor(Math.random()*(max-min+1)+min);
+    },
+    useceil: function (min,max) {
+       // The Math.ceil() function returns the smallest integer greater than or equal to a given number.
+       // # Math.ceil 最接近的整數，大於數字本身的數
+       return Math.ceil(Math.random()*(max-min+1)+min-1);
+    },
+    useround: function (min,max) {
+       // The Math.round() function returns the value of a number rounded to the nearest integer
+       // # Math.round 最接近的整數，如果有小數點，四捨五入
+       return Math.round(Math.random()*(max-min)+min);
+    }
 }
