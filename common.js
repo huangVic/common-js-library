@@ -5,32 +5,117 @@ globalObject.version_number = 270136;
 // ################# getParams() ################
 // Get Url Patameters;
 // globalObject.params = getParams();
-function getParams(){
-    var parameters = location.search.substring(1).split("&");
-    var i = 0;
-    var args = new Object();
-    for (var i = 0; i < parameters.length; i++) {
 
-        var p = parameters[i].split("=");
-        if(p[0] == "previous"){
-            var pString = "";
-            for (var j = 1; j < p.length; j++) {
-                if(pString==""){
-                    pString = p[j];
-                }else{
-                    pString = pString +"=" +p[j];
-                }
-            }
-            args[p[0]] = pString;
-        }else{
-            args[p[0]] = p[1];
+globalObject.params = {
+    
+    // get params object;
+    GetUrlParams: function (url) {
+        var parameters = new Array();
+
+        if (url) {
+            parameters = url.slice(url.indexOf('?') + 1).split('&');
+        } else {
+            parameters = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
         }
 
+        var i = 0;
+        var args = new Object();
+        for (var i = 0; i < parameters.length; i++) {
+
+            if (parameters[i].indexOf('?') > -1) {
+                var hash_temp = parameters[i].split('?');
+                parameters.push(hash_temp[1]);
+                parameters[i] = hash_temp[0];
+            }
+
+            var p = parameters[i].split("=");
+            args.push(p[0]);
+            if (p[1]) {
+                var hashTemp = p[1].split('#');
+                args[p[0]] = hashTemp[0];
+            }
+            else {
+                p[p[0]] = "";
+            }
+        }
+        return args;
+    },
+    
+    // get parameter by name;
+    GetUrlParameterbyName: function (name, url) {
+        var getUrlVars = function (url) {
+            var vars = [], hash;
+            var hashes = new Array();
+            if (url) {
+                hashes = url.slice(url.indexOf('?') + 1).split('&');
+            }
+            else {
+                hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+            }
+            for (var i = 0; i < hashes.length; i++) {
+                if (hashes[i].indexOf('?') > -1) {
+                    var hash_temp = hashes[i].split('?');
+                    hashes.push(hash_temp[1]);
+                    hashes[i] = hash_temp[0];
+                }
+                hash = hashes[i].split('=');
+                vars.push(hash[0]);
+                if (hash[1]) {
+                    var hashTemp = hash[1].split('#');
+                    vars[hash[0]] = hashTemp[0];
+                }
+                else {
+                    vars[hash[0]] = "";
+                }
+            }
+            if (vars === undefined) {
+                return null;
+            }
+            return vars;
+        };
+        var getUrlVar = function (name, url) {
+            return getUrlVars(url)[name];
+        };
+        return getUrlVar(name ,url);
+    }
+    
+};
+
+/*
+function GetParams(url){
+     
+    var parameters = new Array();
+     
+    if(url){
+        parameters = url.slice(url.indexOf('?') + 1).split('&');
+    }else{
+        parameters =  window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    }
+    
+    var i = 0;
+    var args = new Object();
+    for ( var i = 0 ; i < parameters.length ; i++ ) {
+        
+        if ( parameters[i].indexOf('?') > -1 ) {
+            var hash_temp = parameters[i].split('?');
+            parameters.push(hash_temp[1]);
+            parameters[i] = hash_temp[0];
+        }
+        
+        var p = parameters[i].split("=");
+        args.push(p[0]);
+        if (p[1]) {
+            var hashTemp = p[1].split('#');
+            args[p[0]] = hashTemp[0];
+        }
+        else {
+            p[p[0]] = "";
+        }
     }
     return args;
 }
+*/
 
-globalObject.params = getParams();
 
 
 // ################# AJAX API: get, post, put, delete  ################
@@ -205,6 +290,18 @@ function loadFile(filename, callback) {
     }
     xmlhttp.send();
 }
+// ################# Load Script  ################
+function loadScript(url, callback){
+    var head = document.getElementsByTagName('head')[0];
+    var script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = url;
+	if(callback){
+		script.onreadystatechange = callback;
+		script.onload = callback;
+    }
+	head.appendChild(script);
+}
 // ################# Load js/css File  ################
 // loadJsCssFile('app.js', 'js', callbck);
 function loadjscssfile(filename, filetype, callbck){
@@ -227,6 +324,7 @@ function loadjscssfile(filename, filetype, callbck){
         document.getElementsByTagName("head")[0].appendChild(fileref);
     }
 }
+
 
 
 
