@@ -12,6 +12,7 @@ function start(){
     document.body.addEventListener('keyup', function(e) {
         if (e.keyCode == 13){
             if (input.value != ""){
+                socketSync.sendMessage(input.value)
                 console.log("input.value: " + input.value)
                 input.value = "";
             }
